@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Industries Alimentaires</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            height: 1800px;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: linear-gradient(#47ab30, #ffa6a6);
+        }
+        .Title {
+            font-size: 50px;
+            text-align: center;
+            color: #fefefe;
+            
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+
+            margin-bottom: 20px;
+            border-radius: 20px;
+        }
+        .note {
+            font-size: 26px;
+            color: #ffffff;
+            background-color: rgba(195, 20, 20, 0.919);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 20px 30px 20px 30px;
+            margin-bottom: 20px;
+            margin: 10px ;
+            border-radius: 20px;
+        }
+        .question-container {
+            
+            background: #f8f9fa;
+            font-size: 35px;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .options button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            font-size: 35px;
+            padding: 12px;
+            text-align: left;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .options button:hover {
+            background: #e9ecef;
+        }
+        .correct {
+            background: #d4edda !important;
+            border-color: #c3e6cb;
+        }
+        .incorrect {
+            background: #f8d7da !important;
+            border-color: #f5c6cb;
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .score {
+            font-size: 1.5em;
+            margin: 20px 0;
+            padding: 15px;
+            background: #007bff;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 60px;
+            font-size: 50px;
+            background: #ea1a2f;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .box {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px; /* Adds space below each div */
+          }
+
+    </style>
+</head>
+<body>
+    <div class="box"></div>
+    <div class="Title"><b>Quiz Industries Alimentaires</b></div>
+    <div class="timer" id="timer">30:00</div>
+    <div id="quiz">
+    <div id="questions"></div>
+    <div id="result" class="hidden">
+        <div class="score">Score final: <span id="final-score">0</span>/20</div>
+        <button onclick="location.reload()">Recommencer</button>
+     </div>
+    </div>
+    <div class="box"></div>
+    <div class="note"> <strong>* Une mauvaise réponse =  (-1 min ) du temps restant.</strong></div>
+    
+    <script>
+    
+
+    //quiz2
+    
+        const questions = [
+            {
+                question: "Quel procédé utilise des microondes pour détruire les microorganismes ?",
+                options: [
+                    "Tyndallisation",
+                    "Ohmic heating",
+                    "Pascalisation",
+                    "Irradiation"
+                ],
+                correct: 3,
+                explanation: "L'irradiation utilise des rayonnements ionisants pour éliminer les pathogènes."
+            },
+            {
+                question: "Quel additif alimentaire prévient l'oxydation des graisses ?",
+                options: [
+                    "Colorant E100",
+                    "Antioxydant E300",
+                    "Émulsifiant E322",
+                    "Conservateur E250"
+                ],
+                correct: 1,
+                explanation: "Les antioxydants comme la vitamine C (E300) protègent contre le rancissement."
+            },
+            {
+                question: "Quelle enzyme est utilisée dans la fabrication du fromage ?",
+                options: [
+                    "Amylase",
+                    "Pepsine",
+                    "Presure",
+                    "Catalase"
+                ],
+                correct: 2,
+                explanation: "La presure contient de la chymosine pour coaguler le lait."
+            },
+            {
+                question: "Quel est le principal microorganisme utilisé dans la fermentation lactique ?",
+                options: [
+                    "Saccharomyces cerevisiae",
+                    "Lactobacillus",
+                    "Aspergillus oryzae",
+                    "Bacillus subtilis"
+                ],
+                correct: 1,
+                explanation: "Les lactobacilles transforment le lactose en acide lactique."
+            },
+            {
+                question: "Quelle norme internationale concerne la sécurité alimentaire ?",
+                options: [
+                    "ISO 9001",
+                    "ISO 22000",
+                    "ISO 14001",
+                    "ISO 45001"
+                ],
+                correct: 1,
+                explanation: "L'ISO 22000 spécifie les exigences pour un système de management de la sécurité alimentaire."
+            },
+            {
+                question: "Quel gaz est utilisé dans l'emballage sous atmosphère modifiée ?",
+                options: [
+                    "Oxygène pur",
+                    "Azote",
+                    "Dioxyde de carbone",
+                    "Hydrogène"
+                ],
+                correct: 1,
+                explanation: "L'azote (N2) est inerte et prévient l'oxydation."
+            },
+            {
+                question: "Quel danger est classé en 'danger physique' dans l'HACCP ?",
+                options: [
+                    "Pesticides",
+                    "Virus",
+                    "Morceau de verre",
+                    "Mycotoxines"
+                ],
+                correct: 2,
+                explanation: "Les corps étrangers comme le verre sont des dangers physiques."
+            },
+            {
+                question: "Quelle technologie permet de détecter les corps étrangers dans les aliments ?",
+                options: [
+                    "Spectrométrie de masse",
+                    "Rayons X",
+                    "Chromatographie",
+                    "PCR"
+                ],
+                correct: 1,
+                explanation: "Les rayons X détectent les densités anormales comme le métal ou le verre."
+            },
+            {
+                question: "Quel processus permet d'éliminer l'air des emballages ?",
+                options: [
+                    "Surgélation",
+                    "Lyophilisation",
+                    "Sous-vide",
+                    "Trempe"
+                ],
+                correct: 2,
+                explanation: "L'emballage sous vide retire l'air pour limiter l'oxydation."
+            },
+            {
+                question: "Quelle est la fonction principale d'un émulsifiant ?",
+                options: [
+                    "Colorer les aliments",
+                    "Stabiliser les mélanges eau/huile",
+                    "Tuer les bactéries",
+                    "Augmenter le volume"
+                ],
+                correct: 1,
+                explanation: "Les émulsifiants maintiennent l'homogénéité des émulsions."
+            },
+            {
+                question: "Quel microorganisme produit des toxines dans les conserves ?",
+                options: [
+                    "Lactococcus lactis",
+                    "Staphylococcus aureus",
+                    "Clostridium perfringens",
+                    "Bifidobacterium"
+                ],
+                correct: 2,
+                explanation: "Clostridium botulinum se développe en anaérobiose dans les conserves."
+            },
+            {
+                question: "Quelle méthode mesure la charge microbienne totale ?",
+                options: [
+                    "Dénombrement sur gélose",
+                    "Test ELISA",
+                    "PCR quantitative",
+                    "Test d'acidité"
+                ],
+                correct: 0,
+                explanation: "La numération sur milieu gélosé donne la flore totale viable."
+            },
+            {
+                question: "Quel paramètre est crucial pour la DLC (Date Limite de Consommation) ?",
+                options: [
+                    "Couleur de l'emballage",
+                    "Activité de l'eau",
+                    "Prix de vente",
+                    "Origine géographique"
+                ],
+                correct: 1,
+                explanation: "L'aw influence directement la croissance microbienne."
+            },
+            {
+                question: "Quelle technologie permet une pasteurisation à froid ?",
+                options: [
+                    "Haute pression hydrostatique",
+                    "Four microondes",
+                    "Congélation rapide",
+                    "Ultrafiltration"
+                ],
+                correct: 0,
+                explanation: "La HPP utilise des pressions élevées pour inactiver les microbes."
+            },
+            {
+                question: "Quel indicateur mesure l'efficacité d'une stérilisation ?",
+                options: [
+                    "Valeur D",
+                    "pH-mètre",
+                    "Aw-mètre",
+                    "Spectrophotomètre"
+                ],
+                correct: 0,
+                explanation: "La valeur D mesure la résistance thermique des microorganismes."
+            },
+            {
+                question: "Quelle substance est utilisée pour la clarification des jus ?",
+                options: [
+                    "Bentonite",
+                    "Chlorure de sodium",
+                    "Acide citrique",
+                    "Lécithine"
+                ],
+                correct: 0,
+                explanation: "La bentonite absorbe les particules en suspension."
+            },
+            {
+                question: "Quel traitement permet d'obtenir du lait 'longue conservation' ?",
+                options: [
+                    "Pasteurisation basse",
+                    "Ébullition",
+                    "UHT",
+                    "Fermentation"
+                ],
+                correct: 2,
+                explanation: "Le traitement UHT (Ultra Haute Température) stérilise le lait."
+            },
+            {
+                question: "Quel est l'avantage principal de la lyophilisation ?",
+                options: [
+                    "Coût énergétique bas",
+                    "Conservation des arômes",
+                    "Destruction des spores",
+                    "Vitesse de traitement"
+                ],
+                correct: 1,
+                explanation: "La déshydratation à froid préserve les qualités organoleptiques."
+            },
+            {
+                question: "Quel dispositif prévient la contamination croisée ?",
+                options: [
+                    "Sas d'air",
+                    "Tapis roulant",
+                    "Cuve de mélange",
+                    "Broyeur"
+                ],
+                correct: 0,
+                explanation: "Les sas d'air contrôlent les flux entre zones de production."
+            },
+            {
+                question: "Quelle analyse permet de détecter les OGM ?",
+                options: [
+                    "Test de flottation",
+                    "PCR",
+                    "Titrage acidobasique",
+                    "Spectroscopie IR"
+                ],
+                correct: 1,
+                explanation: "La PCR amplifie les séquences ADN spécifiques."
+            }
+        ];
+
+    
+    
+    
+
+
+        let shuffledQuestions = [];
+        let currentQuestion = 0;
+        let score = 0;
+        let timeLeft = 30 * 60;
+        let timerId;
+        
+        function shuffleArray(array) {
+            const arr = array.slice();
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+        function prepareQuestions() {
+            shuffledQuestions = shuffleArray(questions);
+            shuffledQuestions = shuffledQuestions.map(question => {
+                const originalCorrect = question.options[question.correct];
+                const shuffledOptions = shuffleArray(question.options);
+                return {
+                    ...question,
+                    options: shuffledOptions,
+                    correct: shuffledOptions.indexOf(originalCorrect)
+                };
+            });
+        }
+        function startTimer() {
+            timerId = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                if(timeLeft <= 0) resetQuiztime(); 
+            }, 1000);
+        }
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+        function resetQuiz() {
+            currentQuestion = 0 ;
+            score = 0;
+            timeLeft =  timeLeft - 60;
+            clearInterval(timerId);
+            prepareQuestions();
+            startTimer();
+            document.getElementById('result').classList.add('hidden');
+            document.getElementById('questions').classList.remove('hidden');
+            showQuestion();
+        }     
+        function resetQuiztime() {
+            currentQuestion = 0;
+            score = 0;
+            timeLeft =  30 * 60 ;
+            clearInterval(timerId);
+            prepareQuestions();
+            startTimer();
+            updateTimer();
+            document.getElementById('result').classList.add('hidden');
+            document.getElementById('questions').classList.remove('hidden');
+            showQuestion();
+        }
+        function handleAnswer(selectedIndex) {
+            const q = shuffledQuestions[currentQuestion];
+            const feedback = document.getElementById(`feedback-${currentQuestion}`);
+            const buttons = document.querySelectorAll('.options button');
+
+            buttons.forEach(btn => btn.disabled = true);
+            
+            if(selectedIndex === q.correct) {
+                score++;
+                buttons[selectedIndex].classList.add('correct');
+                feedback.innerHTML = `<div class="correct">✅ Correct! ${q.explanation}</div>`;
+                
+                setTimeout(() => {
+                    currentQuestion++;
+                    if(currentQuestion < shuffledQuestions.length) showQuestion();
+                    else endQuiz();
+                }, 2500);
+            } else {
+                buttons[selectedIndex].classList.add('incorrect');
+                buttons[q.correct].classList.add('correct');
+                feedback.innerHTML = `
+                    <div class="incorrect">❌ Incorrect. 
+                    <br>La bonne réponse était : <strong>${q.options[q.correct]}</strong>
+                    <br>${q.explanation}</div>`;
+                
+                setTimeout(resetQuiz, 4500);
+            }
+            feedback.classList.remove('hidden');
+        }
+        function endQuiz() {
+             clearInterval(timerId);
+             document.getElementById('questions').classList.add('hidden');
+             document.getElementById('result').classList.remove('hidden');
+             document.getElementById('final-score').textContent = score;
+          }
+        function showQuestion() {
+            const q = shuffledQuestions[currentQuestion];
+            const questionHTML = `
+                <div class="question-container">
+                    <h3>Question ${currentQuestion + 1}/${shuffledQuestions.length}</h3>
+                    <p>${q.question}</p>
+                    <div class="options">
+                        ${q.options.map((option, index) => `
+                            <button onclick="handleAnswer(${index})">${option}</button>
+                        `).join('')}
+                    </div>
+                    <div id="feedback-${currentQuestion}" class="feedback hidden"></div>
+                </div>`;
+            document.getElementById('questions').innerHTML = questionHTML;
+        }
+
+        prepareQuestions();
+        startTimer();
+        showQuestion();
+
+    </script>
+
+</body>
+</html>
